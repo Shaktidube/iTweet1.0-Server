@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import { ApolloServer } from "@apollo/server"
 import { expressMiddleware } from '@apollo/server/express4';
 // import { ExpressMiddleware } from "@apollo/server"
+import { User } from "./user"
 import { graphql } from "graphql";
 
 export async function initServer(){
@@ -13,15 +14,15 @@ export async function initServer(){
 
     const graphqlServer = new ApolloServer ({
         typeDefs:`
+        ${User.types}
         type Query{
-            sayhello: String
-            sayhellotome(name: String!): String
+            ${User.queries}
+            
         }
         `,
         resolvers:{
             Query:{
-                sayhello: () => 'hello from GraphQl Server',
-                sayhellotome: (parent: any, {name}:{name:string}) => `Namste ${name}`
+                ...User.resolvers.queries,
             },
             
         },
